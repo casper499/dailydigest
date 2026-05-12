@@ -119,6 +119,35 @@ def fetch_instagram(token, label):
     }
 
 
+# ── Instagram (public scrape fallback) ────────────────────────────────────────
+
+def fetch_instagram_public(username, label):
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "x-ig-app-id": "936619743392459",
+    }
+    r = requests.get(
+        f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
+        headers=headers, timeout=10,
+    )
+    if r.status_code != 200:
+        return None
+    u = r.json().get("data", {}).get("user", {})
+    if not u:
+        return None
+    followers = u.get("edge_followed_by", {}).get("count", 0)
+    snap_key = f"ig_{label}_followers"
+    return {
+        "username": username,
+        "followers": followers,
+        "posts": u.get("edge_owner_to_timeline_media", {}).get("count", 0),
+        "monthly_reach": None,
+        "monthly_impressions": None,
+        "delta_followers": monthly_delta(followers, snap_key),
+        "_snap_key": snap_key,
+    }
+
+
 # ── TikTok (public scrape) ─────────────────────────────────────────────────────
 
 def fetch_tiktok():
@@ -212,7 +241,8 @@ def fetch_all():
         result["youtube"] = {"error": str(e)}
 
     try:
-        ig_main = fetch_instagram(os.getenv("INSTAGRAM_ACCESS_TOKEN_MAIN"), "main")
+        token_main = os.getenv("INSTAGRAM_ACCESS_TOKEN_MAIN")
+        ig_main = fetch_instagram(token_main, "main") if token_main else fetch_instagram_public("casperrverbeek", "main")
         if ig_main:
             snap[ig_main["_snap_key"]] = ig_main["followers"]
         result["instagram_main"] = ig_main
@@ -220,7 +250,8 @@ def fetch_all():
         result["instagram_main"] = {"error": str(e)}
 
     try:
-        ig_second = fetch_instagram(os.getenv("INSTAGRAM_ACCESS_TOKEN_SECOND"), "second")
+        token_second = os.getenv("INSTAGRAM_ACCESS_TOKEN_SECOND")
+        ig_second = fetch_instagram(token_second, "second") if token_second else fetch_instagram_public("casprvrbk", "second")
         if ig_second:
             snap[ig_second["_snap_key"]] = ig_second["followers"]
         result["instagram_second"] = ig_second
