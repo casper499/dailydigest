@@ -319,6 +319,7 @@ def fetch_all():
     if snap:
         save_snapshot(snap)
 
+    result["studio"] = load_json(STUDIO_FILE)
     return result
 
 

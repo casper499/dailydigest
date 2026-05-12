@@ -7,8 +7,8 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #f6f6f6;
-      --surface: #ffffff;
+      --bg: #f5f5f5;
+      --surface: #fff;
       --border: #e8e8e8;
       --text: #111;
       --muted: #888;
@@ -18,274 +18,307 @@
       --red: #dc2626;
     }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 20px 100px; }
 
-    /* Layout */
-    .wrap { max-width: 1100px; margin: 0 auto; padding: 32px 24px 100px; }
-    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
-    header h1 { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
-    #updated { font-size: 12px; color: var(--muted); }
+    /* Header */
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+    header h1 { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.02em; }
+    #updated { font-size: 11px; color: var(--faint); }
 
-    .section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--faint); margin-bottom: 10px; margin-top: 28px; }
+    /* Section labels */
+    .sec { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--faint); margin: 24px 0 10px; }
 
-    .grid { display: grid; gap: 10px; }
-    .grid-2 { grid-template-columns: repeat(2, 1fr); }
-    .grid-3 { grid-template-columns: repeat(3, 1fr); }
-    .grid-4 { grid-template-columns: repeat(4, 1fr); }
-    @media (max-width: 700px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+    /* Grids */
+    .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    @media(max-width:720px){ .g2,.g3{ grid-template-columns:1fr; } }
 
     /* Cards */
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; }
-    .card.hero { padding: 28px 28px 24px; }
-    .card-tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+    .card.hero { padding: 26px 26px 22px; }
+    .tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 12px; }
 
-    /* Hero */
-    .hero-val { font-size: 42px; font-weight: 700; letter-spacing: -1.5px; line-height: 1; }
-    .hero-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    /* Big numbers */
+    .big { font-size: 38px; font-weight: 700; letter-spacing: -1.5px; line-height: 1; }
+    .med { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+    .sm  { font-size: 13px; font-weight: 600; }
+    .xs  { font-size: 11px; color: var(--muted); }
 
-    /* Metrics */
-    .metric { margin-bottom: 12px; }
-    .metric:last-of-type { margin-bottom: 0; }
-    .metric-val { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; }
-    .metric-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .metric-sm { font-size: 13px; font-weight: 600; }
+    /* Stat row */
+    .stat-row { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; }
+    .stat { }
+    .stat-val { font-size: 15px; font-weight: 600; }
+    .stat-lbl { font-size: 10px; color: var(--muted); margin-top: 1px; }
 
-    /* Progress bar */
-    .progress-wrap { margin-top: 14px; }
-    .progress-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
-    .progress-label { font-size: 11px; color: var(--muted); }
-    .progress-pct { font-size: 11px; font-weight: 600; color: var(--text); }
-    .bar-track { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
-    .bar-fill { height: 100%; border-radius: 99px; background: var(--text); transition: width 0.6s ease; }
-    .bar-fill.green { background: var(--green); }
-    .bar-fill.amber { background: var(--amber); }
+    /* Progress */
+    .prog { margin-top: 14px; }
+    .prog-head { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .prog-lbl { font-size: 11px; color: var(--muted); }
+    .prog-pct { font-size: 11px; font-weight: 700; }
+    .track { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; margin-bottom: 10px; }
+    .fill  { height: 100%; border-radius: 99px; background: var(--text); transition: width .6s; }
+    .fill.g { background: var(--green); }
+    .fill.a { background: var(--amber); }
 
-    /* Inline progress (for social grid) */
-    .inline-progress { margin-top: 10px; }
-    .ip-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .ip-label { font-size: 12px; color: var(--text); width: 130px; flex-shrink: 0; }
-    .ip-track { flex: 1; height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; }
-    .ip-fill { height: 100%; border-radius: 99px; background: var(--text); }
-    .ip-pct { font-size: 11px; color: var(--muted); width: 34px; text-align: right; flex-shrink: 0; }
+    /* Inline bar rows (social) */
+    .ip { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .ip-lbl { font-size: 12px; min-width: 110px; }
+    .ip-t { flex:1; height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .ip-f { height: 100%; border-radius: 99px; background: var(--text); }
+    .ip-p { font-size: 11px; color: var(--muted); min-width: 32px; text-align: right; }
 
-    /* Delta */
-    .delta { font-size: 11px; font-weight: 500; color: var(--green); margin-left: 6px; }
-    .delta.neg { color: var(--red); }
+    /* Delta badges */
+    .up   { color: var(--green); font-size: 11px; font-weight: 600; margin-left: 5px; }
+    .down { color: var(--red);   font-size: 11px; font-weight: 600; margin-left: 5px; }
+
+    /* Video rank badge */
+    .rank { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 700; background: #111; color: #fff; margin-left: 8px; }
+    .rank.top { background: var(--green); }
+    .rank.mid { background: var(--amber); }
+    .rank.low { background: var(--red); }
+
+    /* Platform divider */
+    .plat-row { border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px; }
+    .plat-row:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
 
     /* Calendar */
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 12px; }
-    .cal-day { text-align: center; }
-    .cal-day-name { font-size: 9px; color: var(--faint); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-    .cal-dot { width: 28px; height: 28px; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--muted); background: var(--bg); }
-    .cal-dot.has-call { background: var(--text); color: #fff; }
+    .cal-g { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; margin-top: 10px; }
+    .cal-col { text-align: center; }
+    .cal-name { font-size: 9px; color: var(--faint); text-transform: uppercase; }
+    .cal-dot { width: 26px; height: 26px; border-radius: 50%; margin: 3px auto 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: var(--muted); background: var(--bg); }
+    .cal-dot.on { background: var(--text); color: #fff; }
     .cal-dot.today { outline: 2px solid var(--text); outline-offset: 2px; }
 
-    /* Revenue split */
-    .rev-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-    .rev-total { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
-    .rev-cut { font-size: 13px; color: var(--muted); }
-    .rev-cut span { color: var(--green); font-weight: 600; }
-
     /* Pending */
-    .pending { color: var(--faint); font-size: 13px; padding: 8px 0; }
+    .pend { color: var(--faint); font-size: 12px; padding: 4px 0; }
 
-    /* Refresh */
-    .refresh { position: fixed; bottom: 24px; right: 24px; background: var(--text); color: #fff; border: none; border-radius: 8px; padding: 10px 18px; font-size: 12px; font-weight: 500; font-family: inherit; cursor: pointer; letter-spacing: 0.01em; }
-    .refresh:hover { opacity: 0.75; }
-    .refresh:disabled { opacity: 0.4; cursor: default; }
-
-    .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0 0; }
+    /* Fixed refresh */
+    .refresh { position: fixed; bottom: 22px; right: 22px; background: var(--text); color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; }
+    .refresh:hover { opacity: .75; }
+    .refresh:disabled { opacity: .4; cursor: default; }
   </style>
 </head>
 <body>
 <div class="wrap">
 
   <header>
-    <h1>Casper · Digest</h1>
+    <h1>Casper · Daily Digest</h1>
     <span id="updated">—</span>
   </header>
 
-  <!-- HERO: Personal YouTube -->
-  <div class="section-label">🎯 Main Goal — Personal YouTube</div>
-  <div id="hero-section"></div>
+  <div class="sec">🎯 Casper Main Channel</div>
+  <div id="s-hero"></div>
 
-  <!-- PERSONAL -->
-  <div class="section-label">Personal</div>
-  <div class="grid grid-3" id="personal-section"></div>
+  <div class="sec">Personal</div>
+  <div class="g2" id="s-personal-top" style="margin-bottom:10px"></div>
+  <div id="s-personal-social"></div>
 
-  <!-- CLIENTS -->
-  <div class="section-label">Clients</div>
-  <div class="grid grid-2" id="clients-section"></div>
+  <div class="sec">Clients</div>
+  <div class="g2" id="s-clients"></div>
 
 </div>
-
-<button class="refresh" id="refresh-btn" onclick="load()">Refresh</button>
+<button class="refresh" id="rb" onclick="load()">Refresh</button>
 
 <script>
-  const GOALS = {};
+function fmt(n,digits=1){
+  if(n==null)return'—';
+  if(n>=1e6)return(n/1e6).toFixed(digits)+'M';
+  if(n>=1e4)return(n/1e3).toFixed(digits)+'K';
+  return Number(n).toLocaleString('en');
+}
+function money(n){
+  if(n==null)return'—';
+  return'$'+Number(n).toLocaleString('en',{minimumFractionDigits:0,maximumFractionDigits:0});
+}
+function pct(v,g){ return g?Math.min(Math.round(v/g*1000)/10,100):0; }
+function barCls(p){ return p>=75?'g':p>=30?'':' a'; }
+function bar(v,g,lbl){
+  const p=pct(v,g);
+  return`<div class="prog">
+    <div class="prog-head"><span class="prog-lbl">${lbl??fmt(v)+' / '+fmt(g)}</span><span class="prog-pct">${p}%</span></div>
+    <div class="track"><div class="fill${barCls(p)}" style="width:${p}%"></div></div>
+  </div>`;
+}
+function delt(n,suffix=''){
+  if(n==null)return'';
+  const s=n>=0?'+':'';
+  const cls=n>=0?'up':'down';
+  return`<span class="${cls}">${s}${fmt(n)}${suffix}</span>`;
+}
+function rankBadge(r){
+  if(!r)return'';
+  const n=parseInt(r.split(' ')[0]);
+  const cls=n<=3?'top':n<=6?'mid':'low';
+  return`<span class="rank ${cls}">🏆 ${r}</span>`;
+}
 
-  function fmt(n) {
-    if (n == null) return '—';
-    if (n >= 1000000) return (n/1000000).toFixed(1)+'M';
-    if (n >= 10000)   return (n/1000).toFixed(1)+'K';
-    return Number(n).toLocaleString('en');
+// ── Hero ──────────────────────────────────────────────────────────────────────
+function renderHero(yt, goals){
+  if(!yt||yt.error){ document.getElementById('s-hero').innerHTML='<div class="card hero"><div class="pend">YouTube data unavailable</div></div>'; return; }
+  const subG=goals.yt_personal_subs||10000;
+  const viewG=500000;
+  const ds = yt.delta_subscribers;
+  const dv = yt.delta_views;
+  document.getElementById('s-hero').innerHTML=`
+    <div class="card hero">
+      <div class="tag">📺 Casper Main Channel · @casperverbeek</div>
+      <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+        <span class="big">${fmt(yt.subscribers,0)}</span>
+        <span class="xs">subscribers</span>
+        ${delt(ds,' this month')}
+      </div>
+      <div class="stat-row">
+        <div class="stat"><div class="stat-val">${fmt(yt.total_views)}</div><div class="stat-lbl">total views</div></div>
+        <div class="stat"><div class="stat-val">${yt.videos}</div><div class="stat-lbl">videos</div></div>
+        ${ds!=null?`<div class="stat"><div class="stat-val">${delt(ds)}</div><div class="stat-lbl">subs this month</div></div>`:''}
+      </div>
+      ${bar(yt.subscribers, subG, `${fmt(yt.subscribers,0)} / ${fmt(subG,0)} subscribers`)}
+      ${bar(yt.total_views, viewG, `${fmt(yt.total_views)} / ${fmt(viewG)} total views`)}
+    </div>`;
+}
+
+// ── Revenue ───────────────────────────────────────────────────────────────────
+function revenueCard(whop, goals){
+  if(!whop)return'<div class="card"><div class="pend">Revenue unavailable</div></div>';
+  const rev=whop.revenue_month??0, cut=whop.personal_cut??0;
+  return`<div class="card">
+    <div class="tag">💰 Revenue</div>
+    <div class="med">${money(rev)}</div>
+    <div class="xs" style="margin-top:4px">Your cut <strong style="color:#111">${money(cut)}</strong> · ${whop.active_members??'—'} members</div>
+    ${bar(rev, goals.whop_revenue_month||10000, `${money(rev)} of ${money(goals.whop_revenue_month)} goal`)}
+    <div class="xs" style="margin-top:8px">Today: ${money(whop.revenue_today)}</div>
+  </div>`;
+}
+
+// ── Short Form ────────────────────────────────────────────────────────────────
+function platRow(emoji, handle, data, followerGoal){
+  if(!data)return`<div class="plat-row"><span class="tag">${emoji} ${handle}</span><div class="pend">No data</div></div>`;
+  const f=data.followers??0, p=pct(f,followerGoal);
+  const views=data.monthly_views??data.monthly_impressions;
+  return`<div class="plat-row">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+      <span class="tag" style="margin-bottom:0">${emoji} ${handle}</span>
+      <span class="xs">${data.posts!=null?data.posts+' posts':''}</span>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <div class="stat"><div class="stat-val">${fmt(f,0)}</div><div class="stat-lbl">followers ${delt(data.delta_followers)}</div></div>
+      ${views!=null?`<div class="stat"><div class="stat-val">${fmt(views)}</div><div class="stat-lbl">views/mo</div></div>`:''}
+      ${data.monthly_reach!=null?`<div class="stat"><div class="stat-val">${fmt(data.monthly_reach)}</div><div class="stat-lbl">reach/mo</div></div>`:''}
+      ${data.interactions!=null?`<div class="stat"><div class="stat-val">${fmt(data.interactions)}</div><div class="stat-lbl">interactions</div></div>`:''}
+    </div>
+    <div class="ip" style="margin-top:10px">
+      <span class="ip-lbl" style="font-size:11px;color:var(--muted)">${fmt(f,0)} → ${fmt(followerGoal)}</span>
+      <div class="ip-t"><div class="ip-f" style="width:${p}%"></div></div>
+      <span class="ip-p">${p}%</span>
+    </div>
+  </div>`;
+}
+
+function shortFormCard(igm, igs, tt, goals){
+  return`<div class="card" style="grid-column:span 2">
+    <div class="tag">📱 Short Form — 10K Followers Each</div>
+    <div class="g3" style="gap:16px">
+      <div>${platRow('📸','@casperrverbeek',igm,goals.ig_main_followers||10000)}</div>
+      <div>${platRow('📸','@casprvrbk',igs,goals.ig_second_followers||10000)}</div>
+      <div>${platRow('🎵','@casprvrbk (TT)',tt,goals.tt_followers||10000)}</div>
+    </div>
+  </div>`;
+}
+
+// ── Calendar ──────────────────────────────────────────────────────────────────
+function calCard(cal){
+  const days=cal?.week_days??[];
+  const dots=days.map(d=>`
+    <div class="cal-col">
+      <div class="cal-name">${d.day}</div>
+      <div class="cal-dot ${d.count>0?'on':''} ${d.is_today?'today':''}">${d.count>0?d.count:d.date}</div>
+    </div>`).join('');
+  return`<div class="card">
+    <div class="tag">📅 Calls</div>
+    <div style="display:flex;gap:16px;align-items:baseline;flex-wrap:wrap">
+      <div class="stat"><div class="stat-val">${cal?.today??0}</div><div class="stat-lbl">today</div></div>
+      <div class="stat"><div class="stat-val">${cal?.this_week??0}</div><div class="stat-lbl">this week</div></div>
+      <div class="stat"><div class="stat-val">${cal?.this_month??0}</div><div class="stat-lbl">this month</div></div>
+    </div>
+    <div class="cal-g">${dots}</div>
+  </div>`;
+}
+
+// ── Client channel card ───────────────────────────────────────────────────────
+function clientCard(emoji, name, handle, yt, studio, subGoal, viewGoal){
+  if(!yt){
+    return`<div class="card">
+      <div class="tag">${emoji} ${name}</div>
+      <div class="pend">Channel pending setup</div>
+    </div>`;
   }
-  function money(n) {
-    if (n == null) return '—';
-    return '$' + Number(n).toLocaleString('en', {minimumFractionDigits:0, maximumFractionDigits:0});
+  if(yt.error){ return`<div class="card"><div class="tag">${emoji} ${name}</div><div class="pend">${yt.error}</div></div>`; }
+
+  const subs28=studio?.[`${handle}_subs_gained_28d`];
+  const views28=yt.monthly_views ?? studio?.[`${handle}_views_28d`];
+  const title=studio?.[`${handle}_latest_title`];
+  const vviews=studio?.[`${handle}_latest_views`];
+  const rank=studio?.[`${handle}_latest_rank`];
+  const ctr=studio?.[`${handle}_latest_ctr`];
+  const dur=studio?.[`${handle}_latest_duration`];
+
+  return`<div class="card">
+    <div class="tag">${emoji} ${name} <span style="font-weight:400;color:var(--faint)">@${handle}</span></div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <div class="stat">
+        <div class="stat-val">${fmt(yt.subscribers,0)} <span style="font-size:12px;font-weight:400;color:var(--muted)">${subs28!=null?delt(subs28,' /28d'):''}</span></div>
+        <div class="stat-lbl">subscribers</div>
+      </div>
+      ${views28!=null?`<div class="stat"><div class="stat-val">${fmt(views28)}</div><div class="stat-lbl">views last 28 days</div></div>`:''}
+      <div class="stat"><div class="stat-val">${yt.videos}</div><div class="stat-lbl">videos</div></div>
+    </div>
+    ${bar(yt.subscribers, subGoal, `${fmt(yt.subscribers,0)} / ${fmt(subGoal)} subs`)}
+    ${views28!=null?bar(views28, viewGoal, `${fmt(views28)} / ${fmt(viewGoal)} views/mo`):''}
+    ${title?`
+    <div style="border-top:1px solid var(--border);margin-top:14px;padding-top:12px">
+      <div class="xs" style="margin-bottom:4px">Latest video ${rankBadge(rank)}</div>
+      <div style="font-size:12px;font-weight:500;line-height:1.4">${title}</div>
+      <div class="stat-row" style="margin-top:8px">
+        ${vviews!=null?`<div class="stat"><div class="stat-val">${fmt(vviews,0)}</div><div class="stat-lbl">views</div></div>`:''}
+        ${ctr!=null?`<div class="stat"><div class="stat-val">${ctr}%</div><div class="stat-lbl">CTR</div></div>`:''}
+        ${dur?`<div class="stat"><div class="stat-val">${dur}</div><div class="stat-lbl">avg duration</div></div>`:''}
+      </div>
+    </div>`:''}
+  </div>`;
+}
+
+// ── Load ──────────────────────────────────────────────────────────────────────
+async function load(){
+  const btn=document.getElementById('rb');
+  btn.disabled=true; btn.textContent='Loading...';
+  try{
+    const d=await(await fetch('/api/data')).json();
+    const goals=d.goals||{};
+    const studio=d.studio||{};
+
+    document.getElementById('updated').textContent=
+      'Updated '+new Date(d.updated_at).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'});
+
+    renderHero(d.youtube_personal, goals);
+
+    document.getElementById('s-personal-top').innerHTML=
+      revenueCard(d.whop, goals)+
+      calCard(d.calcom);
+
+    document.getElementById('s-personal-social').innerHTML=
+      shortFormCard(d.instagram_main, d.instagram_second, d.tiktok, goals);
+
+    // Clients
+    document.getElementById('s-clients').innerHTML=
+      clientCard('🎬','MakeUGC','makeugc', d.youtube_makeugc, studio, goals.yt_makeugc_subs, goals.yt_makeugc_views_month)+
+      clientCard('🚀','Pagepilot','pagepilot', d.youtube_pagepilot, studio, goals.yt_pagepilot_subs, goals.yt_pagepilot_views_month);
+
+  }catch(e){
+    document.getElementById('updated').textContent='Error — '+e.message;
   }
-  function pct(val, goal) {
-    if (!goal || val == null) return 0;
-    return Math.min(Math.round(val/goal*100*10)/10, 100);
-  }
-  function barColor(p) {
-    return p >= 75 ? 'green' : p >= 30 ? '' : 'amber';
-  }
-  function bar(val, goal, label) {
-    const p = pct(val, goal);
-    return `
-      <div class="progress-wrap">
-        <div class="progress-row">
-          <span class="progress-label">${label || fmt(val)+' / '+fmt(goal)}</span>
-          <span class="progress-pct">${p}%</span>
-        </div>
-        <div class="bar-track"><div class="bar-fill ${barColor(p)}" style="width:${p}%"></div></div>
-      </div>`;
-  }
-  function delta(n) {
-    if (n == null) return '';
-    const sign = n >= 0 ? '+' : '';
-    return `<span class="delta ${n < 0 ? 'neg' : ''}">${sign}${fmt(n)}</span>`;
-  }
-
-  function renderHero(yt, goals) {
-    if (!yt || yt.error) {
-      document.getElementById('hero-section').innerHTML = '<div class="card hero"><div class="pending">YouTube data unavailable</div></div>';
-      return;
-    }
-    const goal = goals.yt_personal_subs;
-    const p    = pct(yt.subscribers, goal);
-    document.getElementById('hero-section').innerHTML = `
-      <div class="card hero">
-        <div class="card-tag">📺 @casperverbeek</div>
-        <div class="hero-val">${fmt(yt.subscribers)}</div>
-        <div class="hero-sub">subscribers ${delta(yt.delta_subscribers)} · ${yt.videos} videos</div>
-        ${bar(yt.subscribers, goal, `${fmt(yt.subscribers)} of ${fmt(goal)} subscribers`)}
-      </div>`;
-  }
-
-  function renderPersonal(whop, igm, igs, tt, cal, goals) {
-    // Revenue card
-    const rev  = whop?.revenue_month ?? 0;
-    const cut  = whop?.personal_cut  ?? 0;
-    const revP = pct(rev, goals.whop_revenue_month);
-    const revCard = `
-      <div class="card">
-        <div class="card-tag">💰 Revenue</div>
-        <div class="rev-row">
-          <span class="rev-total">${money(rev)}</span>
-          <span class="rev-cut">your cut <span>${money(cut)}</span></span>
-        </div>
-        ${bar(rev, goals.whop_revenue_month, `${money(rev)} of ${money(goals.whop_revenue_month)} goal`)}
-        <div class="metric-label" style="margin-top:10px">Today: ${money(whop?.revenue_today)} · ${whop?.active_members ?? '—'} members</div>
-      </div>`;
-
-    // Short form social card
-    const ipRow = (label, val, goal) => {
-      const p = pct(val, goal);
-      return `<div class="ip-row">
-        <span class="ip-label">${label}</span>
-        <div class="ip-track"><div class="ip-fill" style="width:${p}%"></div></div>
-        <span class="ip-pct">${p}%</span>
-      </div>`;
-    };
-    const socialCard = `
-      <div class="card">
-        <div class="card-tag">📱 Short Form → 10K each</div>
-        <div class="inline-progress" style="margin-top:4px">
-          ${ipRow('IG @casperrverbeek  ' + fmt(igm?.followers), igm?.followers, goals.ig_main_followers)}
-          ${ipRow('IG @casprvrbk  ' + fmt(igs?.followers), igs?.followers, goals.ig_second_followers)}
-          ${ipRow('TT @casprvrbk  ' + fmt(tt?.followers), tt?.followers, goals.tt_followers)}
-        </div>
-        ${igm?.monthly_impressions != null ? `<div class="metric-label" style="margin-top:12px">IG main impressions: ${fmt(igm.monthly_impressions)} / ${fmt(goals.ig_main_impressions_month)}</div>` : ''}
-        ${igs?.monthly_views != null ? `<div class="metric-label">IG second views: ${fmt(igs.monthly_views)}</div>` : ''}
-      </div>`;
-
-    // Calendar card
-    const days = cal?.week_days ?? [];
-    const dotHtml = days.map(d => `
-      <div class="cal-day">
-        <div class="cal-day-name">${d.day}</div>
-        <div class="cal-dot ${d.count > 0 ? 'has-call' : ''} ${d.is_today ? 'today' : ''}">${d.count > 0 ? d.count : d.date}</div>
-      </div>`).join('');
-    const calCard = `
-      <div class="card">
-        <div class="card-tag">📅 Calls</div>
-        <div style="display:flex; gap:16px; align-items:baseline; margin-bottom:4px">
-          <span class="metric-val">${cal?.today ?? 0}</span><span class="metric-label">today</span>
-          <span class="metric-sm" style="margin-left:8px">${cal?.this_week ?? 0} this week · ${cal?.this_month ?? 0} this month</span>
-        </div>
-        <div class="cal-grid">${dotHtml}</div>
-      </div>`;
-
-    document.getElementById('personal-section').innerHTML = revCard + socialCard + calCard;
-  }
-
-  function renderClients(makeugc, pagepilot, goals) {
-    function clientCard(label, emoji, channelHandle, yt, subGoal, viewGoal) {
-      if (!yt) return `
-        <div class="card">
-          <div class="card-tag">${emoji} ${label}</div>
-          <div class="pending">Channel access pending</div>
-        </div>`;
-      if (yt.error) return `
-        <div class="card">
-          <div class="card-tag">${emoji} ${label}</div>
-          <div class="pending">${yt.error}</div>
-        </div>`;
-      return `
-        <div class="card">
-          <div class="card-tag">${emoji} ${label} <span style="color:var(--faint);font-weight:400">${channelHandle}</span></div>
-          <div class="metric">
-            <div class="metric-val">${fmt(yt.subscribers)}<span style="font-size:13px;font-weight:400;color:var(--muted);margin-left:6px">${delta(yt.delta_subscribers)}</span></div>
-            <div class="metric-label">subscribers</div>
-          </div>
-          ${bar(yt.subscribers, subGoal, `${fmt(yt.subscribers)} / ${fmt(subGoal)} subs`)}
-          ${yt.monthly_views != null ? bar(yt.monthly_views, viewGoal, `${fmt(yt.monthly_views)} / ${fmt(viewGoal)} views/mo`) : '<div class="metric-label" style="margin-top:10px;color:var(--faint)">Monthly views tracking...</div>'}
-        </div>`;
-    }
-
-    document.getElementById('clients-section').innerHTML =
-      clientCard('MakeUGC', '🎬', '@makeugc', makeugc, goals.yt_makeugc_subs, goals.yt_makeugc_views_month) +
-      clientCard('Pagepilot', '🚀', '@pagepilot', pagepilot, goals.yt_pagepilot_subs, goals.yt_pagepilot_views_month);
-  }
-
-  async function load() {
-    const btn = document.getElementById('refresh-btn');
-    btn.disabled = true;
-    btn.textContent = 'Loading...';
-
-    try {
-      const res = await fetch('/api/data');
-      const d   = await res.json();
-      const goals = d.goals || {};
-
-      const ts = new Date(d.updated_at);
-      document.getElementById('updated').textContent =
-        'Updated ' + ts.toLocaleString('en-GB', {dateStyle:'medium', timeStyle:'short'});
-
-      renderHero(d.youtube_personal, goals);
-      renderPersonal(d.whop, d.instagram_main, d.instagram_second, d.tiktok, d.calcom, goals);
-      renderClients(d.youtube_makeugc, d.youtube_pagepilot, goals);
-
-    } catch(e) {
-      document.getElementById('updated').textContent = 'Error loading — ' + e.message;
-    }
-
-    btn.disabled = false;
-    btn.textContent = 'Refresh';
-  }
-
-  load();
+  btn.disabled=false; btn.textContent='Refresh';
+}
+load();
 </script>
 </body>
 </html>
