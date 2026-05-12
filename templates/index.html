@@ -3,334 +3,282 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Digest</title>
+  <title>Casper · Digest</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #f7f7f7;
+      --bg: #f6f6f6;
       --surface: #ffffff;
-      --border: #e9e9e9;
-      --text: #111111;
-      --muted: #999999;
-      --faint: #bbbbbb;
+      --border: #e8e8e8;
+      --text: #111;
+      --muted: #888;
+      --faint: #bbb;
       --green: #16a34a;
+      --amber: #d97706;
       --red: #dc2626;
-      --yt: #ff0000;
-      --ig: #c13584;
-      --tt: #111111;
-      --cal: #6366f1;
-      --whop: #16a34a;
     }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
+    /* Layout */
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 32px 24px 100px; }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+    header h1 { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+    #updated { font-size: 12px; color: var(--muted); }
 
-    header {
-      padding: 36px 40px 0;
-      display: flex;
-      align-items: baseline;
-      gap: 16px;
-    }
+    .section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--faint); margin-bottom: 10px; margin-top: 28px; }
 
-    header h1 {
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
+    .grid { display: grid; gap: 10px; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 700px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
 
-    #updated {
-      font-size: 12px;
-      color: var(--muted);
-    }
+    /* Cards */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; }
+    .card.hero { padding: 28px 28px 24px; }
+    .card-tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
 
-    .section {
-      padding: 28px 40px 0;
-    }
+    /* Hero */
+    .hero-val { font-size: 42px; font-weight: 700; letter-spacing: -1.5px; line-height: 1; }
+    .hero-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
 
-    .section-label {
-      font-size: 11px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: var(--faint);
-      margin-bottom: 12px;
-    }
+    /* Metrics */
+    .metric { margin-bottom: 12px; }
+    .metric:last-of-type { margin-bottom: 0; }
+    .metric-val { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; }
+    .metric-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .metric-sm { font-size: 13px; font-weight: 600; }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 10px;
-    }
+    /* Progress bar */
+    .progress-wrap { margin-top: 14px; }
+    .progress-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+    .progress-label { font-size: 11px; color: var(--muted); }
+    .progress-pct { font-size: 11px; font-weight: 600; color: var(--text); }
+    .bar-track { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 99px; background: var(--text); transition: width 0.6s ease; }
+    .bar-fill.green { background: var(--green); }
+    .bar-fill.amber { background: var(--amber); }
 
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 18px 20px 20px;
-    }
+    /* Inline progress (for social grid) */
+    .inline-progress { margin-top: 10px; }
+    .ip-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .ip-label { font-size: 12px; color: var(--text); width: 130px; flex-shrink: 0; }
+    .ip-track { flex: 1; height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .ip-fill { height: 100%; border-radius: 99px; background: var(--text); }
+    .ip-pct { font-size: 11px; color: var(--muted); width: 34px; text-align: right; flex-shrink: 0; }
 
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      margin-bottom: 16px;
-    }
-
-    .dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    .card-title {
-      font-size: 11px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-    }
-
-    .metrics {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .metric-val {
-      font-size: 26px;
-      font-weight: 600;
-      letter-spacing: -0.5px;
-      line-height: 1;
-    }
-
-    .metric-row {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-    }
-
-    .metric-label {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 3px;
-    }
-
-    .delta {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--green);
-    }
-
+    /* Delta */
+    .delta { font-size: 11px; font-weight: 500; color: var(--green); margin-left: 6px; }
     .delta.neg { color: var(--red); }
-    .delta.neutral { color: var(--faint); }
 
-    .pending {
-      font-size: 13px;
-      color: var(--faint);
-      padding: 4px 0;
-    }
+    /* Calendar */
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 12px; }
+    .cal-day { text-align: center; }
+    .cal-day-name { font-size: 9px; color: var(--faint); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .cal-dot { width: 28px; height: 28px; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--muted); background: var(--bg); }
+    .cal-dot.has-call { background: var(--text); color: #fff; }
+    .cal-dot.today { outline: 2px solid var(--text); outline-offset: 2px; }
 
-    .refresh {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: var(--text);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 9px 16px;
-      font-size: 12px;
-      font-weight: 500;
-      font-family: inherit;
-      cursor: pointer;
-      letter-spacing: 0.01em;
-      transition: opacity 0.15s;
-    }
+    /* Revenue split */
+    .rev-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+    .rev-total { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+    .rev-cut { font-size: 13px; color: var(--muted); }
+    .rev-cut span { color: var(--green); font-weight: 600; }
 
+    /* Pending */
+    .pending { color: var(--faint); font-size: 13px; padding: 8px 0; }
+
+    /* Refresh */
+    .refresh { position: fixed; bottom: 24px; right: 24px; background: var(--text); color: #fff; border: none; border-radius: 8px; padding: 10px 18px; font-size: 12px; font-weight: 500; font-family: inherit; cursor: pointer; letter-spacing: 0.01em; }
     .refresh:hover { opacity: 0.75; }
     .refresh:disabled { opacity: 0.4; cursor: default; }
 
-    @media (max-width: 600px) {
-      header, .section { padding-left: 20px; padding-right: 20px; }
-      .grid { grid-template-columns: 1fr; }
-    }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0 0; }
   </style>
 </head>
 <body>
+<div class="wrap">
 
-<header>
-  <h1>Daily Digest</h1>
-  <span id="updated">—</span>
-</header>
+  <header>
+    <h1>Casper · Digest</h1>
+    <span id="updated">—</span>
+  </header>
 
-<div class="section">
-  <div class="section-label">Social</div>
-  <div class="grid" id="social"></div>
-</div>
+  <!-- HERO: Personal YouTube -->
+  <div class="section-label">🎯 Main Goal — Personal YouTube</div>
+  <div id="hero-section"></div>
 
-<div class="section" style="padding-bottom: 80px;">
-  <div class="section-label">Business</div>
-  <div class="grid" id="business"></div>
+  <!-- PERSONAL -->
+  <div class="section-label">Personal</div>
+  <div class="grid grid-3" id="personal-section"></div>
+
+  <!-- CLIENTS -->
+  <div class="section-label">Clients</div>
+  <div class="grid grid-2" id="clients-section"></div>
+
 </div>
 
 <button class="refresh" id="refresh-btn" onclick="load()">Refresh</button>
 
 <script>
+  const GOALS = {};
+
   function fmt(n) {
-    if (n == null || n === undefined) return '—';
-    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-    if (n >= 10000) return (n / 1000).toFixed(1) + 'K';
+    if (n == null) return '—';
+    if (n >= 1000000) return (n/1000000).toFixed(1)+'M';
+    if (n >= 10000)   return (n/1000).toFixed(1)+'K';
     return Number(n).toLocaleString('en');
   }
-
   function money(n) {
     if (n == null) return '—';
-    return '$' + Number(n).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return '$' + Number(n).toLocaleString('en', {minimumFractionDigits:0, maximumFractionDigits:0});
   }
-
-  function deltaTag(n) {
+  function pct(val, goal) {
+    if (!goal || val == null) return 0;
+    return Math.min(Math.round(val/goal*100*10)/10, 100);
+  }
+  function barColor(p) {
+    return p >= 75 ? 'green' : p >= 30 ? '' : 'amber';
+  }
+  function bar(val, goal, label) {
+    const p = pct(val, goal);
+    return `
+      <div class="progress-wrap">
+        <div class="progress-row">
+          <span class="progress-label">${label || fmt(val)+' / '+fmt(goal)}</span>
+          <span class="progress-pct">${p}%</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill ${barColor(p)}" style="width:${p}%"></div></div>
+      </div>`;
+  }
+  function delta(n) {
     if (n == null) return '';
-    const cls = n > 0 ? 'delta' : n < 0 ? 'delta neg' : 'delta neutral';
-    const sign = n > 0 ? '+' : '';
-    return `<span class="${cls}">${sign}${fmt(n)}/mo</span>`;
+    const sign = n >= 0 ? '+' : '';
+    return `<span class="delta ${n < 0 ? 'neg' : ''}">${sign}${fmt(n)}</span>`;
   }
 
-  function card(title, dotColor, rows) {
-    const metrics = rows.map(r => `
-      <div>
-        <div class="metric-row">
-          <span class="metric-val">${r.value}</span>
-          ${r.delta ? deltaTag(r.delta) : ''}
-        </div>
-        <div class="metric-label">${r.label}</div>
-      </div>
-    `).join('');
-    return `
-      <div class="card">
-        <div class="card-header">
-          <span class="dot" style="background:${dotColor}"></span>
-          <span class="card-title">${title}</span>
-        </div>
-        <div class="metrics">${metrics}</div>
-      </div>
-    `;
+  function renderHero(yt, goals) {
+    if (!yt || yt.error) {
+      document.getElementById('hero-section').innerHTML = '<div class="card hero"><div class="pending">YouTube data unavailable</div></div>';
+      return;
+    }
+    const goal = goals.yt_personal_subs;
+    const p    = pct(yt.subscribers, goal);
+    document.getElementById('hero-section').innerHTML = `
+      <div class="card hero">
+        <div class="card-tag">📺 @casperverbeek</div>
+        <div class="hero-val">${fmt(yt.subscribers)}</div>
+        <div class="hero-sub">subscribers ${delta(yt.delta_subscribers)} · ${yt.videos} videos</div>
+        ${bar(yt.subscribers, goal, `${fmt(yt.subscribers)} of ${fmt(goal)} subscribers`)}
+      </div>`;
   }
 
-  function pendingCard(title, dotColor, note) {
-    return `
+  function renderPersonal(whop, igm, igs, tt, cal, goals) {
+    // Revenue card
+    const rev  = whop?.revenue_month ?? 0;
+    const cut  = whop?.personal_cut  ?? 0;
+    const revP = pct(rev, goals.whop_revenue_month);
+    const revCard = `
       <div class="card">
-        <div class="card-header">
-          <span class="dot" style="background:${dotColor}"></span>
-          <span class="card-title">${title}</span>
+        <div class="card-tag">💰 Revenue</div>
+        <div class="rev-row">
+          <span class="rev-total">${money(rev)}</span>
+          <span class="rev-cut">your cut <span>${money(cut)}</span></span>
         </div>
-        <div class="pending">${note}</div>
-      </div>
-    `;
+        ${bar(rev, goals.whop_revenue_month, `${money(rev)} of ${money(goals.whop_revenue_month)} goal`)}
+        <div class="metric-label" style="margin-top:10px">Today: ${money(whop?.revenue_today)} · ${whop?.active_members ?? '—'} members</div>
+      </div>`;
+
+    // Short form social card
+    const ipRow = (label, val, goal) => {
+      const p = pct(val, goal);
+      return `<div class="ip-row">
+        <span class="ip-label">${label}</span>
+        <div class="ip-track"><div class="ip-fill" style="width:${p}%"></div></div>
+        <span class="ip-pct">${p}%</span>
+      </div>`;
+    };
+    const socialCard = `
+      <div class="card">
+        <div class="card-tag">📱 Short Form → 10K each</div>
+        <div class="inline-progress" style="margin-top:4px">
+          ${ipRow('IG @casperrverbeek  ' + fmt(igm?.followers), igm?.followers, goals.ig_main_followers)}
+          ${ipRow('IG @casprvrbk  ' + fmt(igs?.followers), igs?.followers, goals.ig_second_followers)}
+          ${ipRow('TT @casprvrbk  ' + fmt(tt?.followers), tt?.followers, goals.tt_followers)}
+        </div>
+        ${igm?.monthly_impressions != null ? `<div class="metric-label" style="margin-top:12px">IG main impressions: ${fmt(igm.monthly_impressions)} / ${fmt(goals.ig_main_impressions_month)}</div>` : ''}
+        ${igs?.monthly_views != null ? `<div class="metric-label">IG second views: ${fmt(igs.monthly_views)}</div>` : ''}
+      </div>`;
+
+    // Calendar card
+    const days = cal?.week_days ?? [];
+    const dotHtml = days.map(d => `
+      <div class="cal-day">
+        <div class="cal-day-name">${d.day}</div>
+        <div class="cal-dot ${d.count > 0 ? 'has-call' : ''} ${d.is_today ? 'today' : ''}">${d.count > 0 ? d.count : d.date}</div>
+      </div>`).join('');
+    const calCard = `
+      <div class="card">
+        <div class="card-tag">📅 Calls</div>
+        <div style="display:flex; gap:16px; align-items:baseline; margin-bottom:4px">
+          <span class="metric-val">${cal?.today ?? 0}</span><span class="metric-label">today</span>
+          <span class="metric-sm" style="margin-left:8px">${cal?.this_week ?? 0} this week · ${cal?.this_month ?? 0} this month</span>
+        </div>
+        <div class="cal-grid">${dotHtml}</div>
+      </div>`;
+
+    document.getElementById('personal-section').innerHTML = revCard + socialCard + calCard;
+  }
+
+  function renderClients(makeugc, pagepilot, goals) {
+    function clientCard(label, emoji, channelHandle, yt, subGoal, viewGoal) {
+      if (!yt) return `
+        <div class="card">
+          <div class="card-tag">${emoji} ${label}</div>
+          <div class="pending">Channel access pending</div>
+        </div>`;
+      if (yt.error) return `
+        <div class="card">
+          <div class="card-tag">${emoji} ${label}</div>
+          <div class="pending">${yt.error}</div>
+        </div>`;
+      return `
+        <div class="card">
+          <div class="card-tag">${emoji} ${label} <span style="color:var(--faint);font-weight:400">${channelHandle}</span></div>
+          <div class="metric">
+            <div class="metric-val">${fmt(yt.subscribers)}<span style="font-size:13px;font-weight:400;color:var(--muted);margin-left:6px">${delta(yt.delta_subscribers)}</span></div>
+            <div class="metric-label">subscribers</div>
+          </div>
+          ${bar(yt.subscribers, subGoal, `${fmt(yt.subscribers)} / ${fmt(subGoal)} subs`)}
+          ${yt.monthly_views != null ? bar(yt.monthly_views, viewGoal, `${fmt(yt.monthly_views)} / ${fmt(viewGoal)} views/mo`) : '<div class="metric-label" style="margin-top:10px;color:var(--faint)">Monthly views tracking...</div>'}
+        </div>`;
+    }
+
+    document.getElementById('clients-section').innerHTML =
+      clientCard('MakeUGC', '🎬', '@makeugc', makeugc, goals.yt_makeugc_subs, goals.yt_makeugc_views_month) +
+      clientCard('Pagepilot', '🚀', '@pagepilot', pagepilot, goals.yt_pagepilot_subs, goals.yt_pagepilot_views_month);
   }
 
   async function load() {
     const btn = document.getElementById('refresh-btn');
     btn.disabled = true;
     btn.textContent = 'Loading...';
-    document.getElementById('updated').textContent = '—';
 
     try {
       const res = await fetch('/api/data');
-      const d = await res.json();
+      const d   = await res.json();
+      const goals = d.goals || {};
 
       const ts = new Date(d.updated_at);
       document.getElementById('updated').textContent =
-        'Updated ' + ts.toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+        'Updated ' + ts.toLocaleString('en-GB', {dateStyle:'medium', timeStyle:'short'});
 
-      let social = '';
-      let business = '';
+      renderHero(d.youtube_personal, goals);
+      renderPersonal(d.whop, d.instagram_main, d.instagram_second, d.tiktok, d.calcom, goals);
+      renderClients(d.youtube_makeugc, d.youtube_pagepilot, goals);
 
-      // YouTube
-      const yt = d.youtube || {};
-      if (!yt.error) {
-        social += card('YouTube', '#ff0000', [
-          { value: fmt(yt.subscribers), label: 'Subscribers', delta: yt.delta_subscribers },
-          { value: fmt(yt.total_views), label: 'Total views', delta: yt.delta_views },
-          { value: yt.videos, label: 'Videos' },
-        ]);
-      } else {
-        social += pendingCard('YouTube', '#ff0000', yt.error);
-      }
-
-      // Instagram main
-      const igm = d.instagram_main;
-      if (igm && !igm.error) {
-        const igmRows = [
-          { value: fmt(igm.followers), label: 'Followers', delta: igm.delta_followers },
-        ];
-        if (igm.monthly_views != null) igmRows.push({ value: fmt(igm.monthly_views), label: 'Monthly views' });
-        if (igm.monthly_reach != null) igmRows.push({ value: fmt(igm.monthly_reach), label: 'Monthly reach' });
-        if (igm.interactions != null) igmRows.push({ value: fmt(igm.interactions), label: 'Interactions' });
-        if (igm.profile_visits != null) igmRows.push({ value: fmt(igm.profile_visits), label: 'Profile visits' });
-        social += card(`Instagram @${igm.username}`, '#c13584', igmRows);
-      } else {
-        social += pendingCard('Instagram @casperrverbeek', '#c13584', 'Loading...');
-      }
-
-      // Instagram second
-      const igs = d.instagram_second;
-      if (igs && !igs.error) {
-        const igsRows = [
-          { value: fmt(igs.followers), label: 'Followers', delta: igs.delta_followers },
-        ];
-        if (igs.monthly_views != null) igsRows.push({ value: fmt(igs.monthly_views), label: 'Monthly views' });
-        if (igs.monthly_reach != null) igsRows.push({ value: fmt(igs.monthly_reach), label: 'Monthly reach' });
-        if (igs.interactions != null) igsRows.push({ value: fmt(igs.interactions), label: 'Interactions' });
-        social += card(`Instagram @${igs.username}`, '#c13584', igsRows);
-      } else {
-        social += pendingCard('Instagram @casprvrbk', '#c13584', 'Loading...');
-      }
-
-      // TikTok
-      const tt = d.tiktok || {};
-      if (tt.followers != null) {
-        social += card(`TikTok @${tt.username}`, '#111111', [
-          { value: fmt(tt.followers), label: 'Followers', delta: tt.delta_followers },
-          { value: fmt(tt.likes), label: 'Total likes' },
-          { value: tt.videos, label: 'Videos' },
-        ]);
-      } else {
-        social += pendingCard('TikTok @casprvrbk', '#111111', tt.error || 'Could not load');
-      }
-
-      document.getElementById('social').innerHTML = social;
-
-      // Cal.com
-      const cal = d.calcom || {};
-      if (!cal.error) {
-        business += card('Cal.com', '#6366f1', [
-          { value: cal.today, label: 'Calls today' },
-          { value: cal.this_week, label: 'This week' },
-          { value: cal.this_month, label: 'This month' },
-        ]);
-      }
-
-      // Whop
-      const whop = d.whop || {};
-      if (!whop.error) {
-        business += card('Whop', '#16a34a', [
-          { value: money(whop.revenue_today), label: 'Today' },
-          { value: money(whop.revenue_month), label: 'This month' },
-          { value: money(whop.revenue_30d), label: 'Last 30 days' },
-          { value: whop.active_members, label: 'Active members' },
-        ]);
-      }
-
-      document.getElementById('business').innerHTML = business;
-
-    } catch (e) {
-      document.getElementById('updated').textContent = 'Error loading data';
+    } catch(e) {
+      document.getElementById('updated').textContent = 'Error loading — ' + e.message;
     }
 
     btn.disabled = false;
