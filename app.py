@@ -1,7 +1,7 @@
 import os, json, re, urllib.parse
 import requests
 from datetime import datetime, timedelta, timezone
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
 
@@ -9,6 +9,7 @@ load_dotenv()
 
 app = Flask(__name__)
 SNAPSHOTS_FILE = os.path.join(os.path.dirname(__file__), "snapshots.json")
+IG_INSIGHTS_FILE = os.path.join(os.path.dirname(__file__), "ig_insights.json")
 
 
 # ── Snapshots (monthly delta tracking) ────────────────────────────────────────
@@ -333,6 +334,22 @@ def daily_job():
     send_whatsapp(build_whatsapp_message(d))
 
 
+# ── Instagram insights store ───────────────────────────────────────────────────
+
+def load_ig_insights():
+    if os.path.exists(IG_INSIGHTS_FILE):
+        with open(IG_INSIGHTS_FILE) as f:
+            return json.load(f)
+    return {}
+
+def save_ig_insights(data):
+    existing = load_ig_insights()
+    existing.update(data)
+    existing["updated_at"] = now().isoformat()
+    with open(IG_INSIGHTS_FILE, "w") as f:
+        json.dump(existing, f)
+
+
 # ── Routes ─────────────────────────────────────────────────────────────────────
 
 @app.route("/")
@@ -341,7 +358,23 @@ def dashboard():
 
 @app.route("/api/data")
 def api_data():
-    return jsonify(fetch_all())
+    d = fetch_all()
+    ig = load_ig_insights()
+    if ig and d.get("instagram_main"):
+        d["instagram_main"]["monthly_views"] = ig.get("main_views")
+        d["instagram_main"]["monthly_reach"] = ig.get("main_reach")
+        d["instagram_main"]["interactions"] = ig.get("main_interactions")
+        d["instagram_main"]["profile_visits"] = ig.get("main_profile_visits")
+    if ig and d.get("instagram_second"):
+        d["instagram_second"]["monthly_views"] = ig.get("second_views")
+        d["instagram_second"]["monthly_reach"] = ig.get("second_reach")
+        d["instagram_second"]["interactions"] = ig.get("second_interactions")
+    return jsonify(d)
+
+@app.route("/api/ig-insights", methods=["POST"])
+def update_ig_insights():
+    save_ig_insights(request.json)
+    return jsonify({"status": "saved"})
 
 @app.route("/api/trigger")
 def trigger():

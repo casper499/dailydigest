@@ -266,25 +266,30 @@
       // Instagram main
       const igm = d.instagram_main;
       if (igm && !igm.error) {
-        social += card(`Instagram @${igm.username}`, '#c13584', [
+        const igmRows = [
           { value: fmt(igm.followers), label: 'Followers', delta: igm.delta_followers },
-          { value: fmt(igm.monthly_reach), label: 'Monthly reach' },
-          { value: fmt(igm.monthly_impressions), label: 'Monthly impressions' },
-        ]);
+        ];
+        if (igm.monthly_views != null) igmRows.push({ value: fmt(igm.monthly_views), label: 'Monthly views' });
+        if (igm.monthly_reach != null) igmRows.push({ value: fmt(igm.monthly_reach), label: 'Monthly reach' });
+        if (igm.interactions != null) igmRows.push({ value: fmt(igm.interactions), label: 'Interactions' });
+        if (igm.profile_visits != null) igmRows.push({ value: fmt(igm.profile_visits), label: 'Profile visits' });
+        social += card(`Instagram @${igm.username}`, '#c13584', igmRows);
       } else {
-        social += pendingCard('Instagram @casperrverbeek', '#c13584', 'Access token needed');
+        social += pendingCard('Instagram @casperrverbeek', '#c13584', 'Loading...');
       }
 
       // Instagram second
       const igs = d.instagram_second;
       if (igs && !igs.error) {
-        social += card(`Instagram @${igs.username}`, '#c13584', [
+        const igsRows = [
           { value: fmt(igs.followers), label: 'Followers', delta: igs.delta_followers },
-          { value: fmt(igs.monthly_reach), label: 'Monthly reach' },
-          { value: fmt(igs.monthly_impressions), label: 'Monthly impressions' },
-        ]);
+        ];
+        if (igs.monthly_views != null) igsRows.push({ value: fmt(igs.monthly_views), label: 'Monthly views' });
+        if (igs.monthly_reach != null) igsRows.push({ value: fmt(igs.monthly_reach), label: 'Monthly reach' });
+        if (igs.interactions != null) igsRows.push({ value: fmt(igs.interactions), label: 'Interactions' });
+        social += card(`Instagram @${igs.username}`, '#c13584', igsRows);
       } else {
-        social += pendingCard('Instagram @casprvrbk', '#c13584', 'Access token needed');
+        social += pendingCard('Instagram @casprvrbk', '#c13584', 'Loading...');
       }
 
       // TikTok
