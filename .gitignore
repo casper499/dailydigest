@@ -1,0 +1,7 @@
+.env
+__pycache__/
+*.pyc
+snapshots.json
+digest.log
+*.egg-info/
+.DS_Store
